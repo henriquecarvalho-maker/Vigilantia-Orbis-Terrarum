@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MI103 - Space | Lançamentos Espaciais</title>
+  <link rel="stylesheet" href="/static/space.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <h1>MI103 - Space</h1>
+    </div>
+    <nav class="nav-bar">
+      <ul>
+          <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="/noticias"><i class="fas fa-globe"></i> Geo</a></li>
+          <li><a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
+      </ul>
+  </nav>
+  </header>
+
+  <!-- Banner de destaque adaptado -->
+  <section class="highlight-banner">
+    <!-- Overlay com gradiente -->
+    <div class="skrim-overlay"></div>
+    
+    {% if destaque.imagem == "static/images/default.png" %}
+      <!-- Banner animado padrão -->
+      <div class="animated-banner">
+        <div class="banner">
+          <span class="letter m">M</span>
+          <span class="letter e">E</span>
+          <span class="letter i">I</span>
+        </div>
+      </div>
+    {% else %}
+      <!-- Imagem do foguete como fundo -->
+      <div class="rocket-banner" 
+         style="background-image: url('{{ destaque.imagem }}'); 
+                background-size: cover; 
+                background-position: center;
+                width: 100%; 
+                height: 85vh; 
+                position: relative;">
+      </div>
+    {% endif %}
+      <!-- Container da contagem regressiva (posicionado sobre a imagem) -->
+      
+      <div class="countdown-container">
+        <div class="countdown-grid">
+          <div class="countdown-item">
+            <div class="time-label">T-</div>
+          </div>
+          
+          <div class="countdown-item">
+            <div class="time-number" id="days">00</div>
+            <div class="time-unit">Dias</div>
+          </div>
+          
+          <div class="countdown-separator">:</div>
+          
+          <div class="countdown-item">
+            <div class="time-number" id="hours">00</div>
+            <div class="time-unit">Horas</div>
+          </div>
+          
+          <div class="countdown-separator">:</div>
+          
+          <div class="countdown-item">
+            <div class="time-number" id="mins">00</div>
+            <div class="time-unit">Min</div>
+          </div>
+          
+          <div class="countdown-separator">:</div>
+          
+          <div class="countdown-item">
+            <div class="time-number" id="secs">00</div>
+            <div class="time-unit">Seg</div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Conteúdo do destaque (título e data/hora formatada) -->
+    <div class="highlight-content">
+      <h2>{{ destaque.name }}</h2>
+      <p class="noticia-datetime-banner">Data: <span id="dataDestaque" data-iso="{{ destaque.net }}">{{ destaque.net }}</span></p>
+      <hr class="custom-hr">
+      <p class="missao-descricao-banner">
+        {% if destaque.mission and destaque.mission.description %}
+          {{ destaque.mission.description }}
+        {% else %}
+          Dados da missão não disponíveis
+        {% endif %}
+      </p>
+    </div>
+  </section>
+  
+  <main class="main-content">
+    <h2 class="section-title">Proximos Lançamentos 
+      <a href="/past-launches" class="discover-button">
+        Status dos Laçamentos
+        <span class="circle-arrow">
+          <!-- Ícone de seta diagonal (SVG) -->
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 4h6v6m-11 9l11-11" 
+                  stroke="currentColor" 
+                  fill="none" 
+                  stroke-width="2" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </h2>
+    <div class="container">
+      {% for noticia in noticias_rocket %}
+        <div class="noticia">
+          <div class="image-container">
+            {% if noticia.image %}
+              <img src="{{ noticia.image }}" alt="Imagem do lançamento" class="noticia-img">
+            {% elif noticia.rocket and noticia.rocket.configuration and noticia.rocket.configuration.image_url %}
+              <img src="{{ noticia.rocket.configuration.image_url }}" alt="Imagem do foguete" class="noticia-img">
+            {% endif %}
+            <!-- Nome da agência posicionado sobre a imagem -->
+            <div class="agency-label">
+              {% if noticia.launch_service_provider and noticia.launch_service_provider.name %}
+                {{ noticia.launch_service_provider.name }}
+              {% else %}
+                Agência desconhecida
+              {% endif %}
+            </div>
+          </div>
+          <div class="noticia-content">
+            <h3 class="noticia-title">
+              <span class="rocket-name" data-mission="{% if noticia.mission and noticia.mission.description %}{{ noticia.mission.description }}{% else %}Dados da missão não disponíveis{% endif %}">
+                {{ noticia.name }}
+              </span>
+            </h3>
+
+            <p class="noticia-datetime">Data/Hora: <span class="iso-date">{{ noticia.net }}</span></p>
+
+            <button class="missao-toggle">
+              Missão
+              <span class="toggle-icon">▼</span>
+            </button>
+
+            <div class="missao-descricao-container collapsed">
+              <p class="missao-descricao">
+                {% if noticia.mission and noticia.mission.description %}
+                  {{ noticia.mission.description }}
+                {% else %}
+                  Dados da missão não disponíveis
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+
+    <section class="updates-banner">
+      <div class="banner-description">
+        <h2>Updates starship
+          <a href="#" class="discover-button">
+            Mais sobre o programa
+            <span class="circle-arrow">
+              <!-- Ícone de seta diagonal (SVG) -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 4h6v6m-11 9l11-11" 
+                      stroke="currentColor" 
+                      fill="none" 
+                      stroke-width="2" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </h2>
+      </div>
+      
+      <div class="mission-banner">
+        <!-- Máscara para melhorar a legibilidade dos textos -->
+        <div class="skrim-overlay"></div>
+        <!-- Slider de imagens de fundo -->
+        <div class="slider">
+          <div class="slides">
+            <img src="/static/images/starship/starship.jpg" alt="Slide 1">
+            <img src="/static/images/starship/starship_1.jpg" alt="Slide 2">
+            <img src="/static/images/starship/starship_2.jpg" alt="Slide 3">
+            <img src="/static/images/starship/starship_3.jpg" alt="Slide 4">
+          </div>
+          <div class="indicators">
+            <span class="indicator active" data-slide="0"></span>
+            <span class="indicator" data-slide="1"></span>
+            <span class="indicator" data-slide="2"></span>
+            <span class="indicator" data-slide="3"></span>
+          </div>
+        </div>
+    
+        <!-- Conteúdo sobreposto ao slider -->
+        <div class="banner-container">
+          <div class="title-section">
+            <h1 class="main-title">STARSHIP UPDATES<br>PROGRESS</h1>
+            <p class="mission-description">
+              NASA experts discuss launching and returning cargo to the International Space Station and the planning that goes into delivering several months worth of supplies and crucial science to astronauts in space.
+            </p>
+          </div>
+          <div class="mission-info">
+            <div class="info-card">
+              <div class="info-label">SUPERHEAVY BOOSTER</div>
+              <div class="info-value"></div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">RAPTOR ENGINE</div>
+              <div class="info-value"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Seção de eventos -->
+    <section class="events-section">
+      <div class="container_events">
+        <h2 class="section-title">Eventos Agendados</h2>
+        {% for evento in eventos %}
+        <div class="event">
+          <div class="event-image">
+            {% if evento.imagem %}
+              <img src="{{ evento.imagem }}" alt="{{ evento.name }}" class="event-img">
+            {% else %}
+              <div class="no-image">Sem imagem disponível</div>
+            {% endif %}
+          </div>
+          
+          <div class="event-content">
+            <div class="event-date">
+              {% if evento.date %}
+                {{ evento.date }}
+              {% else %}
+                {{ evento.net }}
+              {% endif %}
+            </div>
+            <h3 class="event-title">{{ evento.name }}</h3>
+            <p class="event-description">
+              {% if evento.description %}
+                {{ evento.description }}
+              {% else %}
+                No description available.
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        {% if not loop.last %}
+          <hr class="event-divider">
+        {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const dataDestaqueElem = document.getElementById('dataDestaque');
+      if (!dataDestaqueElem) return;
+      
+      const launchDateIso = dataDestaqueElem.getAttribute('data-iso');
+      const launchDate = new Date(launchDateIso.trim());
+      
+      // Verifica se a data é válida
+      if (isNaN(launchDate.getTime())) {
+        console.error('Data de lançamento inválida:', launchDateIso);
+        return;
+      }
+  
+      function updateCountdown() {
+        const now = new Date();
+        const diff = launchDate - now;
+
+        if (diff <= 0) {
+          document.getElementById('days').textContent = '00';
+          document.getElementById('hours').textContent = '00';
+          document.getElementById('mins').textContent = '00';
+          document.getElementById('secs').textContent = '00';
+          return;
+        }
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+        
+        document.getElementById('days').textContent = String(days).padStart(2, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('mins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('secs').textContent = String(secs).padStart(2, '0');
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+  </script>    
+
+
+  <!-- Logica do das imagens rolantes -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let currentSlide = 0;
+      const slider = document.querySelector('.slider');
+      const slides = document.querySelector('.slider .slides');
+      const indicators = document.querySelectorAll('.slider .indicator');
+      const totalSlides = indicators.length;
+      const intervalTime = 5000; // 5 segundos
+  
+      // Atualiza a posição dos slides com base na largura do slider
+      function updateSlider() {
+        const sliderWidth = slider.clientWidth;
+        slides.style.transform = `translateX(-${currentSlide * sliderWidth}px)`;
+      }
+  
+      // Vai para o slide indicado e atualiza os indicadores
+      function goToSlide(index) {
+        currentSlide = index;
+        updateSlider();
+        indicators.forEach((indicator, idx) => {
+          indicator.classList.toggle('active', idx === index);
+        });
+      }
+  
+      // Avança para o próximo slide
+      function nextSlide() {
+        let next = (currentSlide + 1) % totalSlides;
+        goToSlide(next);
+      }
+  
+      // Eventos de clique nos indicadores
+      indicators.forEach((indicator, idx) => {
+        indicator.addEventListener('click', () => {
+          goToSlide(idx);
+        });
+      });
+  
+      // Atualiza a posição caso a janela seja redimensionada
+      window.addEventListener('resize', updateSlider);
+  
+      // Inicia o carrossel após 5 segundos, garantindo que a primeira imagem seja exibida o tempo necessário
+      setTimeout(() => {
+        setInterval(nextSlide, intervalTime);
+      }, intervalTime);
+    });
+  </script>
+  
+  <footer class="minimal-footer">
+    <div class="footer-container">
+      <!-- Logo e Social Media -->
+      <div class="footer-primary">
+        <div class="logo-area">
+          <img src="https://via.placeholder.com/120x40" alt="Logo" class="footer-logo">
+        </div>
+        <div class="social-area">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      
+      <!-- Menu Links -->
+      <div class="footer-menu">
+        <nav>
+          <a href="#">Início</a>
+          <a href="#">Sobre</a>
+          <a href="#">Serviços</a>
+          <a href="#">Produtos</a>
+          <a href="#">Blog</a>
+          <a href="#">Contato</a>
+        </nav>
+      </div>
+      
+      <!-- Linha separadora -->
+      <div class="footer-divider"></div>
+      
+      <!-- Info Bottom -->
+      <div class="footer-bottom">
+        <div class="copyright">
+          <p>&copy; 2025 Sua Empresa. Todos os direitos reservados.</p>
+        </div>
+        <div class="contact-info">
+          <a href="mailto:contato@seusite.com.br">contato@seusite.com.br</a>
+          <span class="separator">|</span>
+          <a href="tel:+5511912345678">+55 (11) 91234-5678</a>
+        </div>
+        <div class="legal-links">
+          <a href="#">Política de Privacidade</a>
+          <span class="separator">|</span>
+          <a href="#">Termos de Uso</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  
+  <!-- Scripts -->
+  <script>
+    // Função de formatação para datas
+    function formatCustomDateTime(isoString) {
+      const date = new Date(isoString);
+      const dtf = new Intl.DateTimeFormat('pt-BR', {
+        month: 'short',
+        weekday: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short',
+        hour12: false
+      });
+      
+      const parts = dtf.formatToParts(date);
+      let month = '', weekday = '', day = '', hour = '', minute = '', tz = '';
+      
+      parts.forEach(part => {
+        switch (part.type) {
+          case 'month':
+            month = part.value;
+            break;
+          case 'weekday':
+            weekday = part.value;
+            break;
+          case 'day':
+            day = part.value;
+            break;
+          case 'hour':
+            hour = part.value;
+            break;
+          case 'minute':
+            minute = part.value;
+            break;
+          case 'timeZoneName':
+            tz = part.value;
+            break;
+          default:
+            break;
+        }
+      });
+      
+      // Capitaliza o mês
+      month = month.charAt(0).toUpperCase() + month.slice(1);
+      
+      // Mapeamento dos dias da semana para a abreviação desejada
+      const weekdayMap = {
+        'segunda-feira': 'Seg',
+        'terça-feira': 'Terça',
+        'quarta-feira': 'Qua',
+        'quinta-feira': 'Qui',
+        'sexta-feira': 'Sex',
+        'sábado': 'Sáb',
+        'domingo': 'Dom'
+      };
+      
+      weekday = weekdayMap[weekday.toLowerCase()] || weekday;
+      
+      // Retorna no formato desejado: Exemplo "Fev Terça 18 20:15 BRT"
+      return `${month} ${weekday} ${day} ${hour}:${minute} ${tz}`;
+    }
+    
+    // Atualiza as datas na página após o carregamento
+    document.addEventListener('DOMContentLoaded', () => {
+      // Atualiza a data do destaque
+      const destaqueElem = document.getElementById('dataDestaque');
+      if (destaqueElem) {
+        const iso = destaqueElem.getAttribute('data-iso');
+        destaqueElem.textContent = formatCustomDateTime(destaqueElem.textContent.trim());
+      }
+      
+      // Atualiza as datas de cada notícia
+      const isoDates = document.querySelectorAll('.iso-date');
+      isoDates.forEach(elem => {
+        elem.textContent = formatCustomDateTime(elem.textContent.trim());
+      });
+    });
+  </script>
+
+  <!-- Script para o tooltip (mantido igual) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.missao-toggle').forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = e.currentTarget.closest('.noticia');
+          const descricao = card.querySelector('.missao-descricao-container');
+
+          // Fecha os outros cards
+          document.querySelectorAll('.noticia').forEach(otherCard => {
+            if (otherCard !== card) {
+              const otherDescricao = otherCard.querySelector('.missao-descricao-container');
+              const otherButton = otherCard.querySelector('.missao-toggle');
+              otherDescricao.classList.remove('expanded');
+              otherButton.classList.remove('active');
+              otherCard.classList.remove('expanded');
+            }
+          });
+
+          // Alterna o estado no card clicado
+          descricao.classList.toggle('expanded');
+          button.classList.toggle('active');
+          card.classList.toggle('expanded');
+        });
+      });
+
+      // Fecha os cards ao clicar fora deles
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.noticia')) {
+          document.querySelectorAll('.noticia').forEach(card => {
+            const descricao = card.querySelector('.missao-descricao-container');
+            const button = card.querySelector('.missao-toggle');
+            descricao.classList.remove('expanded');
+            button.classList.remove('active');
+            card.classList.remove('expanded');
+          });
+        }
+      });
+    });
+
+
+  </script>
+  <script>
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 100) {
+        header.style.padding = '10px 30px';
+      } else {
+        header.style.padding = '15px 30px';
+      }
+    });
+  </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Script para controlar o efeito de scroll no header
+          const header = document.querySelector('.header');
+          window.addEventListener('scroll', function() {
+              if (window.scrollY > 100) {
+                  header.classList.add('scrolled');
+              } else {
+                  header.classList.remove('scrolled');
+              }
+          });
+          
+          // Script para controlar o menu mobile
+          const mobileMenuBtn = document.createElement('button');
+          mobileMenuBtn.className = 'mobile-menu-btn';
+          mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+          header.appendChild(mobileMenuBtn);
+          
+          const navBar = document.querySelector('.nav-bar');
+          mobileMenuBtn.addEventListener('click', function() {
+              navBar.classList.toggle('active');
+              if (navBar.classList.contains('active')) {
+                  mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+              } else {
+                  mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+              }
+          });
+          
+          // Fechar menu ao clicar em um link
+          const navLinks = document.querySelectorAll('.nav-bar ul li a');
+          navLinks.forEach(link => {
+              link.addEventListener('click', function() {
+                  navBar.classList.remove('active');
+                  mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+              });
+          });
+      });
+      </script>
+  </script>
+</body>
+</html>
