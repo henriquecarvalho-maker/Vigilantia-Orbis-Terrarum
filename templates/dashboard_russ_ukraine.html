@@ -1,204 +1,541 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MI103</title>
-    <link rel="stylesheet" href="/static/css/dashboard_russ_ukraine.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Estatísticas do Conflito</title>
+  <!-- Link para o CSS do dashboard -->
+  <link rel="stylesheet" href="/static/css/dashboard_russ_ukraine.css">
+  <!-- Biblioteca Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Dados da Guerra Russo-Ucraniana</h1>
-    </header>
-    
-     <!-- Novo banner explicativo com botões -->
-    <div class="title-banner">
-        <div class="banner-content">
-        <h2>Abaixo terá uma analise visual dos numeros da guerra</h2>
-        <p>Aqui você encontra informações detalhadas sobre o conflito, com um dashboard interativo sobre baixas de equipamentos e pessoal, além de uma linha do tempo com os principais acontecimentos.</p>
+  <!-- Seção de Cabeçalho e Hero -->
+  <header>
+    <div class="hero">
+      <div class="container">
+        <h1>Painel de Estatísticas do Conflito</h1>
+        <p>Monitoramento de baixas e impactos do conflito em curso</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegação Principal -->
+  <nav class="main-nav">
+    <div class="container nav-container">
+      <ul class="nav-tabs">
+        <li><a href="#overview" class="nav-link active" data-section="overview">Visão Geral</a></li>
+        <li><a href="#casualties" class="nav-link" data-section="casualties">Baixas</a></li>
+        <li><a href="#military" class="nav-link" data-section="military">Perdas Militares</a></li>
+        <li><a href="#regional" class="nav-link" data-section="regional">Impacto Regional</a></li>
+        <li><a href="#timeline" class="nav-link" data-section="timeline">Linha do Tempo</a></li>
+        <li><a href="#acled" class="nav-link" data-section="acled">ACLED</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Aviso -->
+    <div class="disclaimer">
+      <p><strong>Aviso:</strong> Os dados apresentados neste painel provêm de diversas fontes como o <a href="https://war.ukraine.ua/">Governo Ucraniano</a>, <a href="https://acleddata.com/ukraine-conflict-monitor/">ACLED</a> e tembem povenientes de datasets kaggle como o do <a href="https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war">Petro Ivaniuk</a>. Os dados apresentados podem não ser totalmente precisos sendo aproximações e estimativas.</p>
+    </div>
+
+    <!-- Seção Visão Geral -->
+    <section id="overview" class="content-section active">
+      <div class="section-title">
+        <h2>Estatísticas Atuais</h2>
+        <p>Métricas principais do conflito até hoje</p>
+      </div>
+
+      <div class="stats-overview">
+        <div class="stat-card">
+          <h3>Dias de Conflito</h3>
+          <div class="stat-value">763</div>
         </div>
-    </div>
-    
-    <div class="text_container">
-        <h1>Numeros da Russas</h1>
-        <p>Visualização de dados sobre perdas de equipamentos e pessoal</p>
-    </div>
-    <div class="container">
+
+        <div class="stat-card">
+          <h3>Baixas Civis</h3>
+          <div class="stat-value">10.842</div>
+          <div class="daily-change positive">+18</div>
+          <div class="stat-secondary">
+            <div class="stat-label">Feridos</div>
+            <div class="stat-value">18.974</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Cidades Afetadas</h3>
+          <div class="stat-value">428</div>
+          <div class="daily-change negative">-3</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Pessoas Deslocadas</h3>
+          <div class="stat-value">8.1M</div>
+        </div>
+      </div>
+      
+      <!-- Seção de Gráficos -->
+      <div class="section-title">
+        <h2>Análise do Conflito</h2>
+        <p>Representação visual das principais métricas</p>
+      </div>
+      
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3>Baixas Civis ao Longo do Tempo</h3>
+          <div class="chart-container">
+            <canvas id="chart-civilian"></canvas>
+          </div>
+        </div>
         
-        <div id="loading" class="loader"></div>
-        <div id="error-message" class="error-message" style="display: none;"></div>
-        <div id="dashboard-content" style="display: none;">
-            <div class="stats-overview" id="stats-cards">
-                <!-- Cards de estatísticas serão inseridos aqui via JavaScript -->
-            </div>
-
-            <div class="charts-container">
-                <div class="chart-card">
-                    <h3>Perdas de Equipamentos ao Longo do Tempo</h3>
-                    <canvas id="equipmentChart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3>Perdas de Pessoal ao Longo do Tempo</h3>
-                    <canvas id="personnelChart"></canvas>
-                </div>
-            </div>
-
-            <div class="data-table">
-                <div class="tabs">
-                    <div class="tab active" data-tab="personnel">Pessoal</div>
-                    <div class="tab" data-tab="equipment">Equipamentos</div>
-                    <div class="tab" data-tab="equipment_correction">Correções de Equipamentos</div>
-                </div>
-
-                <div class="tab-content active" id="personnel-content">
-                    <table id="personnel-table">
-                        <thead>
-                            <!-- Cabeçalhos serão inseridos aqui via JavaScript -->
-                        </thead>
-                        <tbody>
-                            <!-- Dados serão inseridos aqui via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="tab-content" id="equipment-content">
-                    <table id="equipment-table">
-                        <thead>
-                            <!-- Cabeçalhos serão inseridos aqui via JavaScript -->
-                        </thead>
-                        <tbody>
-                            <!-- Dados serão inseridos aqui via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="tab-content" id="equipment_correction-content">
-                    <table id="equipment_correction-table">
-                        <thead>
-                            <!-- Cabeçalhos serão inseridos aqui via JavaScript -->
-                        </thead>
-                        <tbody>
-                            <!-- Dados serão inseridos aqui via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <p class="updated-info" id="last-updated">Última atualização: Carregando...</p>
+        <div class="chart-card">
+          <h3>Perdas de Equipamentos Militares</h3>
+          <div class="chart-container">
+            <canvas id="chart-military"></canvas>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Seção Baixas -->
+    <section id="casualties" class="content-section">
+      <div class="section-title">
+        <h2>Baixas Totais</h2>
+        <p>Estimativa de baixas em diferentes grupos</p>
+      </div>
+
+      <div class="total-casualties">
+        <div class="casualty-box civilian">
+          <h3>Baixas Civis</h3>
+          <div class="casualty-number">10.842</div>
+          <div class="casualty-label">Mortes Confirmadas</div>
+        </div>
+
+        <div class="casualty-box military-ua">
+          <h3>Forças Ucranianas</h3>
+          <div class="casualty-number">31.500</div>
+          <div class="casualty-label">Perdas Estimadas</div>
+        </div>
+
+        <div class="casualty-box military-ru">
+          <h3>Forças Russas</h3>
+          <div class="casualty-number">71.200</div>
+          <div class="casualty-label">Perdas Estimadas</div>
+        </div>
+
+        <div class="casualty-box foreign">
+          <h3>Combatentes de Legiões Estrangeiros</h3>
+          <div class="casualty-number">1.870</div>
+          <div class="casualty-label">De diversos países</div>
+        </div>
+      </div>
+      
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3>Baixas por Região</h3>
+          <div class="chart-container">
+            <canvas id="chart-casualties-region"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h3>Baixas por Mês</h3>
+          <div class="chart-container">
+            <canvas id="chart-casualties-month"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Perdas Militares -->
+    <section id="military" class="content-section">
+      <div class="section-title">
+        <h2>Perdas Militares</h2>
+        <p>Análise das perdas de equipamentos e pessoal</p>
+      </div>
+      
+      <div class="stats-overview">
+        <div class="stat-card">
+          <h3>Tanques Ucranianos</h3>
+          <div class="stat-value">342</div>
+          <div class="daily-change negative">-4</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Tanques Russos</h3>
+          <div class="stat-value">1.876</div>
+          <div class="daily-change negative">-12</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Aeronaves Ucranianas</h3>
+          <div class="stat-value">89</div>
+          <div class="daily-change negative">-1</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Aeronaves Russas</h3>
+          <div class="stat-value">315</div>
+          <div class="daily-change negative">-3</div>
+        </div>
+      </div>
+      
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3>Comparação de Perdas de Equipamentos</h3>
+          <div class="chart-container">
+            <canvas id="chart-equipment-comparison"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h3>Tendência Diária de Perdas de Equipamentos</h3>
+          <div class="chart-container">
+            <canvas id="chart-daily-equipment"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Seção Impacto Regional -->
+    <section id="regional" class="content-section">
+      <div class="section-title">
+        <h2>Impacto Regional</h2>
+        <p>Análise de como diferentes regiões são afetadas</p>
+      </div>
+      
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3>Mapa das Áreas Afetadas</h3>
+          <div class="chart-container">
+            <canvas id="chart-map"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h3>Deslocamento Regional</h3>
+          <div class="chart-container">
+            <canvas id="chart-regional-displacement"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stats-overview">
+        <div class="stat-card">
+          <h3>Região de Donetsk</h3>
+          <div class="stat-value">Alto Impacto</div>
+          <div class="stat-secondary">
+            <div class="stat-label">População Afetada</div>
+            <div class="stat-value">2.4M</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Região de Luhansk</h3>
+          <div class="stat-value">Alto Impacto</div>
+          <div class="stat-secondary">
+            <div class="stat-label">População Afetada</div>
+            <div class="stat-value">1.8M</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Região de Kharkiv</h3>
+          <div class="stat-value">Impacto Médio</div>
+          <div class="stat-secondary">
+            <div class="stat-label">População Afetada</div>
+            <div class="stat-value">1.6M</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Região de Kyiv</h3>
+          <div class="stat-value">Baixo Impacto</div>
+          <div class="stat-secondary">
+            <div class="stat-label">População Afetada</div>
+            <div class="stat-value">0.9M</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Seção Linha do Tempo -->
+    <section id="timeline" class="content-section">
+      <div class="section-title">
+        <h2>Linha do Tempo do Conflito</h2>
+        <p>Principais eventos e desenvolvimentos</p>
+      </div>
+      
+      <div class="chart-card">
+        <h3>Linha do Tempo do Conflito</h3>
+        <div class="chart-container">
+          <canvas id="chart-timeline"></canvas>
+        </div>
+      </div>
+      
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Evento</th>
+              <th>Impacto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>24 Fev 2022</td>
+              <td>Início do Conflito</td>
+              <td>Invasão inicial em múltiplas frentes</td>
+            </tr>
+            <tr>
+              <td>16 Mar 2022</td>
+              <td>Bombardeio do Teatro de Mariupol</td>
+              <td>Estimativa de 600 baixas civis</td>
+            </tr>
+            <tr>
+              <td>03 Abr 2022</td>
+              <td>Bucha Libertada</td>
+              <td>Evidências de crimes de guerra descobertas</td>
+            </tr>
+            <tr>
+              <td>17 Mai 2022</td>
+              <td>Rendição em Azovstal</td>
+              <td>Fim da resistência em Mariupol</td>
+            </tr>
+            <tr>
+              <td>11 Set 2022</td>
+              <td>Contraofensiva em Kharkiv</td>
+              <td>Forças ucranianas recapturam território</td>
+            </tr>
+            <tr>
+              <td>11 Nov 2022</td>
+              <td>Kherson Libertada</td>
+              <td>Forças russas se retiram da margem oeste</td>
+            </tr>
+            <tr>
+              <td>24 Fev 2023</td>
+              <td>Aniversário de um ano</td>
+              <td>Conflito continua sem resolução</td>
+            </tr>
+            <tr>
+              <td>17 Mar 2025</td>
+              <td>Dia Atual</td>
+              <td>Conflito continua no terceiro ano</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Seção Monitoramento ACLED -->
+    <section id="acled" class="content-section">
+      <div class="section-title">
+        <h2>Monitoramento ACLED</h2>
+        <p>Dados adicionais do ACLED sobre o Conflito na Ucrânia</p>
+      </div>
+      
+      <div class="stats-overview">
+        <div class="stat-card">
+          <h3>Eventos Registrados</h3>
+          <div class="stat-value">2.500</div>
+        </div>
+        <div class="stat-card">
+          <h3>Fatalidades</h3>
+          <div class="stat-value">8.000</div>
+        </div>
+        <div class="stat-card">
+          <h3>Incidentes Violentos</h3>
+          <div class="stat-value">1.200</div>
+        </div>
+        <div class="stat-card">
+          <h3>Movimentações Militares</h3>
+          <div class="stat-value">600</div>
+        </div>
+      </div>
+      
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3>Eventos Diários (ACLED)</h3>
+          <div class="chart-container">
+            <canvas id="chart-acled-events"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Fatalidades Diárias (ACLED)</h3>
+          <div class="chart-container">
+            <canvas id="chart-acled-fatalities"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Dados Detalhados -->
+    <section id="data-section">
+      <div class="section-title">
+        <h2>Dados Detalhados</h2>
+        <p>Tabelas abrangentes das informações coletadas</p>
+      </div>
+
+      <!-- Abas para categorias de dados -->
+      <div class="data-tabs">
+        <button class="data-tab active" data-tab="casualties-data">Baixas</button>
+        <button class="data-tab" data-tab="equipment">Perdas de Equipamentos</button>
+        <button class="data-tab" data-tab="regions">Regiões Afetadas</button>
+      </div>
+
+      <!-- Conteúdo das abas -->
+      <div class="data-table">
+        <div id="casualties-data" class="tab-content active">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Mortes Civis</th>
+                <th>Feridos Civis</th>
+                <th>Militares (UA)</th>
+                <th>Militares (RU)</th>
+                <th>Estrangeiros</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>15 Mar 2025</td>
+                <td>12</td>
+                <td>28</td>
+                <td>45</td>
+                <td>89</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>14 Mar 2025</td>
+                <td>9</td>
+                <td>22</td>
+                <td>38</td>
+                <td>76</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>13 Mar 2025</td>
+                <td>15</td>
+                <td>31</td>
+                <td>42</td>
+                <td>68</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>12 Mar 2025</td>
+                <td>7</td>
+                <td>19</td>
+                <td>36</td>
+                <td>71</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>11 Mar 2025</td>
+                <td>18</td>
+                <td>34</td>
+                <td>47</td>
+                <td>80</td>
+                <td>4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="equipment" class="tab-content">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tanques Ucranianos</th>
+                <th>Tanques Russos</th>
+                <th>Aeronaves Ucranianas</th>
+                <th>Aeronaves Russas</th>
+                <th>Veículos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>15 Mar 2025</td>
+                <td>4</td>
+                <td>15</td>
+                <td>1</td>
+                <td>3</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td>14 Mar 2025</td>
+                <td>3</td>
+                <td>12</td>
+                <td>0</td>
+                <td>2</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>13 Mar 2025</td>
+                <td>5</td>
+                <td>18</td>
+                <td>2</td>
+                <td>4</td>
+                <td>12</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="regions" class="tab-content">
+          <table>
+            <thead>
+              <tr>
+                <th>Região</th>
+                <th>População Afetada</th>
+                <th>Nível de Dano</th>
+                <th>Baixas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Donetsk</td>
+                <td>2.4M</td>
+                <td>Alto</td>
+                <td>3.500</td>
+              </tr>
+              <tr>
+                <td>Luhansk</td>
+                <td>1.8M</td>
+                <td>Alto</td>
+                <td>2.800</td>
+              </tr>
+              <tr>
+                <td>Kharkiv</td>
+                <td>1.6M</td>
+                <td>Médio</td>
+                <td>1.500</td>
+              </tr>
+              <tr>
+                <td>Kyiv</td>
+                <td>0.9M</td>
+                <td>Baixo</td>
+                <td>600</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='js/dashboard_ru_uk.js') }}"></script>
+  <!-- Rodapé -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Painel de Estatísticas do Conflito. Todos os direitos reservados.</p>
+      <p>Dados obtidos de vários registros públicos, relatórios verificados e do ACLED.</p>
     </div>
-
-    <div class="container_2">
-        <header>
-            <h1>Dashboard de Baixas da Guerra Russo-Ucraniana</h1>
-            <p class="subtitle">Dados de 2022 até março de 2025</p>
-        </header>
-
-        <div class="disclaimer">
-            <strong>Aviso:</strong> Os dados apresentados neste dashboard são baseados em fontes oficiais, porém é importante notar que os números reais de baixas em conflitos são frequentemente contestados e difíceis de verificar com precisão absoluta. As estatísticas podem variar dependendo da fonte e metodologia de contagem.
-        </div>
-
-        <div class="tabs_2">
-            <div class="tab_2 active" onclick="openTab('overview')">Visão Geral</div>
-            <div class="tab_2" onclick="openTab('civilian')">Baixas Civis</div>
-            <div class="tab_2" onclick="openTab('military')">Baixas Militares</div>
-            <div class="tab_2" onclick="openTab('foreign')">Legiões Estrangeiras</div>
-        </div>
-
-        <div id="overview" class="tab_2-content active">
-            <div class="total-casualties">
-                <div class="casualty-box civilian">
-                    <div class="casualty-label">Baixas Civis</div>
-                    <div class="casualty-number">11,582</div>
-                    <div class="casualty-label">Confirmadas</div>
-                </div>
-                <div class="casualty-box military-ua">
-                    <div class="casualty-label">Baixas Militares</div>
-                    <div class="casualty-number">31,000+</div>
-                    <div class="casualty-label">Ucrânia (est.)</div>
-                </div>
-                <div class="casualty-box military-ru">
-                    <div class="casualty-label">Baixas Militares</div>
-                    <div class="casualty-number">55,000+</div>
-                    <div class="casualty-label">Rússia (est.)</div>
-                </div>
-                <div class="casualty-box foreign">
-                    <div class="casualty-label">Combatentes</div>
-                    <div class="casualty-number">1,240+</div>
-                    <div class="casualty-label">Estrangeiros</div>
-                </div>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="chart-container">
-                    <div class="chart-title">Evolução das Baixas Civis (2022-2025)</div>
-                    <canvas id="civilianTimeline" class="chart"></canvas>
-                    <div class="data-source">Fonte: ONU OHCHR</div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-title">Comparação de Baixas Militares (Estimativas)</div>
-                    <canvas id="militaryComparison" class="chart"></canvas>
-                    <div class="data-source">Fonte: Ministério da Defesa Ucraniano, estimativas ocidentais</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="civilian" class="tab_2-content">
-            <div class="dashboard-grid">
-                <div class="chart-container">
-                    <div class="chart-title">Baixas Civis por Região</div>
-                    <canvas id="civilianByRegion" class="chart"></canvas>
-                    <div class="data-source">Fonte: ONU OHCHR</div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-title">Baixas Civis por Tipo de Incidente</div>
-                    <canvas id="civilianByIncident" class="chart"></canvas>
-                    <div class="data-source">Fonte: ONU OHCHR</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="military" class="tab_2-content">
-            <div class="dashboard-grid">
-                <div class="chart-container">
-                    <div class="chart-title">Estimativas de Baixas Militares Ucranianas vs. Russas</div>
-                    <canvas id="militaryEstimates" class="chart"></canvas>
-                    <div class="data-source">Fonte: Estimativas de várias fontes oficiais</div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-title">Equipamento Militar Perdido</div>
-                    <canvas id="equipmentLosses" class="chart"></canvas>
-                    <div class="data-source">Fonte: Oryx, Ministério da Defesa Ucraniano</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="foreign" class="tab_2-content">
-            <div class="dashboard-grid">
-                <div class="chart-container">
-                    <div class="chart-title">Baixas de Combatentes Estrangeiros por País</div>
-                    <canvas id="foreignByCountry" class="chart"></canvas>
-                    <div class="data-source">Fonte: Ministério da Defesa Ucraniano, relatos oficiais</div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-title">Evolução de Baixas de Legiões Estrangeiras</div>
-                    <canvas id="foreignTimeline" class="chart"></canvas>
-                    <div class="data-source">Fonte: Estimativas compiladas de fontes oficiais</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="update-time">Última atualização: 11 de março de 2025</div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-
-    <script src="{{ url_for('static', filename='js/dashboard_ru_uk.js') }}"></script>
-
-    <footer>
-        Dados obtidos do Kaggle: <a href="https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war" target="_blank">2022 Ukraine Russian War</a>. Este dashboard é para fins informativos.
-    </footer>
+  </footer>
 </body>
 </html>
