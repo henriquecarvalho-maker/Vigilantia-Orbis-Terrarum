@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MI103 - Eventos</title>
+  <link rel="stylesheet" href="/static/css/events.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+          <h1>MI103 - Eventos</h1>
+        </div>
+         <!-- Botão Mobile -->
+         <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <nav class="nav-bar">
+            <ul>
+              <li><a href="/space"><i class="fas fa-home"></i> Home</a></li>
+              <li><a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
+            </ul>
+          </nav>
+      </header>
+  
+  <!-- Banner de destaque para eventos -->
+<section class="highlight-banner events-banner">
+    <div class="skrim-overlay"></div>
+    
+    {% if eventos and eventos[0].imagem %}
+    <img src="{{ eventos[0].imagem }}" 
+         alt="{{ eventos[0].name }}" 
+         class="event-banner-img rocket-banner">
+    {% endif %}
+  
+    <div class="highlight-content">
+      {% if eventos %}
+        <div class="noticia-datetime-banner">
+          {% if eventos[0].date %}
+            {{ eventos[0].date }}
+          {% else %}
+            {{ eventos[0].net }}
+          {% endif %}
+        </div>
+        <h2>{{ eventos[0].name }}</h2>
+        <div class="custom-hr"></div>
+        <p class="missao-descricao-banner">{{ eventos[0].description }}</p>
+      {% else %}
+        <h2>Nenhum evento agendado</h2>
+        <div class="custom-hr"></div>
+        <p class="missao-descricao-banner">Volte em breve para conferir nossa programação!</p>
+      {% endif %}
+    </div>
+  </section>
+  
+  <main class="main-content">
+    <!-- Seção de eventos -->
+    <section class="events-section">
+      <div class="container_events">
+        <h2 class="section-title">Eventos Agendados 
+          <a href="/events" class="discover-button">
+            Mais
+            <span class="circle-arrow">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 4h6v6m-11 9l11-11" 
+                      stroke="currentColor" 
+                      fill="none" 
+                      stroke-width="2" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </h2>
+        {% for evento in eventos %}
+          {% if loop.index0 > 0 %} <!-- Começa do segundo evento -->
+          <div class="event fade-in">
+            <div class="event-image">
+              {% if evento.imagem %}
+                <img src="{{ evento.imagem }}" alt="{{ evento.name }}" class="event-img">
+              {% else %}
+                <div class="no-image">Sem imagem disponível</div>
+              {% endif %}
+            </div>
+            <div class="event-content">
+              <div class="event-date">
+                {% if evento.date %}
+                  {{ evento.date }}
+                {% else %}
+                  {{ evento.net }}
+                {% endif %}
+              </div>
+              <h3 class="event-title">{{ evento.name }}</h3>
+              <p class="event-description">{{ evento.description }}</p>
+              <a href="#" class="event-button">Saiba Mais</a>
+            </div>
+          </div>
+          
+          {% if not loop.last %}
+            <hr class="event-divider">
+          {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+  
+  <footer class="minimal-footer">
+    <div class="footer-container">
+      <!-- Logo e Social Media -->
+      <div class="footer-primary">
+        <div class="logo-area">
+          <img src="https://via.placeholder.com/120x40" alt="Logo" class="footer-logo">MI103
+        </div>
+        <div class="social-area">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      
+      <!-- Menu Links -->
+      <div class="footer-menu">
+        <nav>
+          <a href="/">Início</a>
+          <a href="/sobre">Sobre</a>
+          <a href="/contato">Contato</a>
+        </nav>
+      </div>
+      
+      <!-- Linha separadora -->
+      <div class="footer-divider"></div>
+      
+      <!-- Info Bottom -->
+      <div class="footer-bottom">
+        <div class="copyright">
+          <p>&copy; 2025 MI103. Todos os direitos reservados.</p>
+        </div>
+        <div class="contact-info">
+          <a href="mailto:contato@seusite.com.br">contato@seusite.com.br</a>
+          <span class="separator">|</span>
+        </div>
+        <div class="legal-links">
+          <a href="#">Política de Privacidade</a>
+          <span class="separator">|</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        // Código para animação de scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        });
+
+        document.querySelectorAll('.fade-in').forEach((element) => {
+            observer.observe(element);
+        });
+
+        // Efeito de scroll no header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Menu mobile unificado
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navBar = document.querySelector('.nav-bar');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                // Toggle classes para ativar o menu
+                this.classList.toggle('active');
+                navBar.classList.toggle('active');
+                
+                // Alterna ícone entre hambúrguer e X
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-bars')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        }
+        
+        // Fecha o menu ao clicar em links
+        document.querySelectorAll('.nav-bar a').forEach(link => {
+            link.addEventListener('click', function() {
+                navBar.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon.classList.contains('fa-times')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+        
+        // Fecha o menu ao clicar fora dele
+        document.addEventListener('click', function(event) {
+            const isClickInside = navBar.contains(event.target) || mobileMenuBtn.contains(event.target);
+            
+            if (!isClickInside && navBar.classList.contains('active')) {
+                navBar.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon.classList.contains('fa-times')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -59,3 +59,19 @@ def past_launches():
     page_range = [1]
     return render_template('past_launches.html', launches=launches, 
                            current_page=current_page, total_pages=total_pages, page_range=page_range)
+
+
+@space_bp.route('/events', endpoint='events_page')
+def events_page():
+    # Obtém os eventos
+    events = get_upcoming_events(limit=10)
+    
+    # Ajusta as imagens dos eventos
+    for evento in events:
+        caminho_imagem = evento.get('image') or "static/images/default_event.png"
+        evento['imagem'] = caminho_imagem
+    
+    # Debug: imprime os eventos no console para confirmar que há dados
+    print("Eventos:", events)
+    
+    return render_template('events.html', eventos=events)

@@ -18,7 +18,7 @@
     <nav class="nav-bar">
       <ul>
           <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
-          <li><a href="/noticias"><i class="fas fa-globe"></i> Geo</a></li>
+          <li><a href="/events"><i class="fa-solid fa-calendar"></i>Events</a></li>
           <li><a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
       </ul>
   </nav>
@@ -227,7 +227,22 @@
     <!-- Seção de eventos -->
     <section class="events-section">
       <div class="container_events">
-        <h2 class="section-title">Eventos Agendados</h2>
+        <h2 class="section-title">Eventos Agendados 
+          <a href="/events" class="discover-button">
+            MI103 - Eventos
+            <span class="circle-arrow">
+              <!-- Ícone de seta diagonal (SVG) -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 4h6v6m-11 9l11-11" 
+                      stroke="currentColor" 
+                      fill="none" 
+                      stroke-width="2" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </h2>
         {% for evento in eventos %}
         <div class="event">
           <div class="event-image">
