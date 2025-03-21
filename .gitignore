@@ -2,5 +2,6 @@ access.env
 migrations
 models/__pycache__
 static/images
+static/css
 __pycache__
 static/css
