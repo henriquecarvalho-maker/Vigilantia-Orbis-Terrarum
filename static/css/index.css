@@ -55,10 +55,22 @@ header {
 
 h1 {
     font-size: 4rem;
+    font-weight: 750;
     color: var(--text-color);
     margin-bottom: 1rem;
-    font-family: 'Georgia', serif;
+    /*font-family: 'Georgia', serif;*/
     transition: var(--transition);
+    background: linear-gradient(135deg, #d8d8d8 0%, #a0aec0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -4px;
+}
+
+q {
+    font-style: italic;
+    color: var(--subtitle-color);
+    margin-bottom: 1rem;
+    display: block;
 }
 
 .subtitle {
@@ -126,6 +138,10 @@ h1 {
 
 .technology {
     border-bottom: 4px solid var(--accent-technology);
+}
+
+.technology:hover{
+    background-color: rgba(238, 0, 0, 0.776);
 }
 
 .ripple {

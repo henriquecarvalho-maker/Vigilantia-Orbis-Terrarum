@@ -1,4 +1,40 @@
 /* Estilos Gerais */
+:root {
+    --text-color: #333;
+    --background-color: #fcfcfc;
+    --header-bg: #ffffff;
+    --card-bg: #ffffff;
+    --shadow-color: rgba(0,0,0,0.1);
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --secondary-bg: #f8f9fa;
+    --gradient-start: #f8f9fa;
+    --gradient-end: #e9ecef;
+    --text-secondary: #495057;
+    --text-muted: #6c757d;
+    --card-hover-transform: translateY(-10px);
+    --icon-bg: #f0f7ff;
+    --border-color: transparent;
+}
+
+.dark-mode {
+    --text-color: #e0e0e0;
+    --background-color: #121212;
+    --header-bg: #1e1e1e;
+    --card-bg: #1e1e1e;
+    --shadow-color: rgba(0,0,0,0.3);
+    --primary-color: #2196f3;
+    --primary-dark: #0d8bf2;
+    --secondary-bg: #2d2d2d;
+    --gradient-start: #2d2d2d;
+    --gradient-end: #1e1e1e;
+    --text-secondary: #b0b0b0;
+    --text-muted: #a0a0a0;
+    --card-hover-transform: translateY(-10px);
+    --icon-bg: #2d2d2d;
+    --border-color: #333;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -11,18 +47,45 @@ html {
 }
 
 body {
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Toggle Button */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--primary-dark);
 }
 
 /* Header */
 header {
-    background: #ffffff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: var(--header-bg);
+    box-shadow: 0 2px 10px var(--shadow-color);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 nav {
@@ -37,7 +100,8 @@ nav {
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #007bff;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
 }
 
 .nav-links {
@@ -47,13 +111,13 @@ nav {
 
 .nav-links a {
     text-decoration: none;
-    color: #333;
+    color: var(--text-color);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #007bff;
+    color: var(--primary-color);
 }
 
 /* Banner Hero */
@@ -63,8 +127,9 @@ nav {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
     margin-top: 60px;
+    transition: background 0.3s ease;
 }
 
 .hero-content {
@@ -75,13 +140,15 @@ nav {
 .hero h1 {
     font-size: 3.5rem;
     margin-bottom: 1.5rem;
-    color: #212529;
+    color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
-    color: #495057;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
 }
 
 .cta-buttons {
@@ -99,35 +166,111 @@ nav {
 }
 
 .cta-primary {
-    background: #007bff;
+    background: var(--primary-color);
     color: white;
 }
 
 .cta-primary:hover {
-    background: #0056b3;
+    background: var(--primary-dark);
     transform: translateY(-2px);
 }
 
 .cta-secondary {
-    border: 2px solid #007bff;
-    color: #007bff;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
 }
 
 .cta-secondary:hover {
-    background: #007bff;
+    background: var(--primary-color);
     color: white;
     transform: translateY(-2px);
 }
 
-/* Seção Sobre Mim (Já Existente) */
+/* Seção Sobre Mim */
+.about {
+    padding: 5rem 2rem;
+    background: var(--background-color);
+    scroll-margin-top: 80px;
+    transition: background-color 0.3s ease;
+}
+
 .container {
+    max-width: 1200px;
+    margin: 0 auto;
     scroll-margin-top: 100px;
+}
+
+.about-content {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 3rem;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.about-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.about-content h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--primary-color);
+    transition: background-color 0.3s ease;
+}
+
+.about-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.about-text p:last-child {
+    margin-bottom: 0;
+}
+
+.about-icons {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.about-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--icon-bg);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.about-icon:hover {
+    transform: translateY(-5px);
+    background: var(--primary-color);
+    color: white;
 }
 
 /* Seção Portfólio */
 .portfolio {
     padding: 5rem 2rem;
-    background: #ffffff;
+    background: var(--background-color);
+    transition: background-color 0.3s ease;
 }
 
 .portfolio-grid {
@@ -140,28 +283,33 @@ nav {
 }
 
 .portfolio-item {
-    background: white;
+    background: var(--card-bg);
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
 .portfolio-item:hover {
-    transform: translateY(-10px);
+    transform: var(--card-hover-transform) !important;
 }
 
 .portfolio-image {
     height: 200px;
-    background: #f8f9fa;
+    background: var(--secondary-bg);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s ease;
 }
 
 .portfolio-image i {
     font-size: 4rem;
-    color: #007bff;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
 }
 
 .portfolio-info {
@@ -170,22 +318,44 @@ nav {
 
 .portfolio-info h3 {
     margin-bottom: 0.5rem;
-    color: #212529;
+    color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .portfolio-info p {
-    color: #6c757d;
+    color: var(--text-muted);
     margin-bottom: 1rem;
+    transition: color 0.3s ease;
 }
 
 .portfolio-link {
     display: inline-block;
     text-decoration: none;
-    color: #007bff;
+    color: var(--primary-color);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .portfolio-link:hover {
-    color: #0056b3;
+    color: var(--primary-dark);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .about-content {
+        padding: 2rem;
+    }
+    
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+    }
 }

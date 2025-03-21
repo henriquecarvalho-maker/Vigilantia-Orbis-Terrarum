@@ -29,6 +29,37 @@
         </div>
     </section>
 
+    <!-- Seção Sobre Mim Atualizada -->
+    <section class="about" id="sobre">
+        <div class="container">
+            <div class="about-content animate">
+                <div class="about-header">
+                    <h2>Sobre Mim</h2>
+                </div>
+                <div class="about-body">
+                    <div class="about-text">
+                        <p>Olá! Sou um <strong>cientista e analista de dados</strong> autodidata. Minha jornada na tecnologia começou com a faculdade de Análise e Desenvolvimento de Sistemas, mas, no penúltimo mês, decidi trancar o curso, pois já estudava Data Science por conta própria e percebi que era nessa área que realmente queria me aprofundar. Afinal, dados não mentem, e os meus mostravam que eu estava no caminho errado.</p>
+                        
+                        <p>Desde então, venho estudando e desenvolvendo projetos em <strong>análise de dados</strong>, <strong>aprendizado de máquina</strong> e <strong>NLP</strong>, aplicando conhecimentos práticos que vão desde detecção de fake news até previsão de churn, paginas web aprimoradas por IA e mais algumas coisa. Minha abordagem combina embasamento técnico com muita curiosidade e um olhar analítico para resolver problemas.</p>
+                        
+                        <p>Seja bem-vindo ao meu portfólio! Se você também acredita que bons insights começam com boas perguntas, está no lugar certo. Aqui você encontrará meus projetos, experiências e contribuições no mundo dos dados.</p>
+                    </div>
+                    <div class="about-icons">
+                        <div class="about-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="about-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="about-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Seção Sobre Mim Existente -->
     <div class="container" id="sobre">
         <!-- ... (mesmo conteúdo anterior da seção sobre) ... -->
@@ -95,36 +126,71 @@
     </section>
 
     <script>
-        // Scroll suave para todas as âncoras
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+        // Adicionar botão toggle ao body
+        document.body.innerHTML += `
+        <button class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+        </button>
+        `;
+
+        // Verificar se o usuário já tinha preferência salva
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle i').classList.remove('fa-moon');
+            document.querySelector('.theme-toggle i').classList.add('fa-sun');
+        }
+
+        // Toggle para o dark mode
+        document.querySelector('.theme-toggle').addEventListener('click', function() {
+            if (document.body.classList.contains('dark-mode')) {
+                // Mudar para light mode
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('dark-mode', 'disabled');
+                this.querySelector('i').classList.remove('fa-sun');
+                this.querySelector('i').classList.add('fa-moon');
+            } else {
+                // Mudar para dark mode
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('dark-mode', 'enabled');
+                this.querySelector('i').classList.remove('fa-moon');
+                this.querySelector('i').classList.add('fa-sun');
+            }
+        });
+
+        // Verificar preferência do sistema
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        if (prefersDarkScheme.matches && localStorage.getItem('dark-mode') === null) {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle i').classList.remove('fa-moon');
+            document.querySelector('.theme-toggle i').classList.add('fa-sun');
+            localStorage.setItem('dark-mode', 'enabled');
+        }
+
+        // Garantir que a animação dos cards do portfólio não interfira com a visualização
+        window.addEventListener('DOMContentLoaded', function() {
+            // Override para garantir que os cartões sejam sempre visíveis
+            document.querySelectorAll('.portfolio-item').forEach(item => {
+                // Remover estilos inline que podem ter sido aplicados pelo script original
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+
+        // Observar mudanças no modo para garantir que os cards permaneçam visíveis
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    document.querySelectorAll('.portfolio-item').forEach(item => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
                     });
                 }
             });
         });
 
-        // Animação ao scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        });
-
-        document.querySelectorAll('.portfolio-item').forEach((item) => {
-            item.style.opacity = 0;
-            item.style.transform = 'translateY(30px)';
-            item.style.transition = 'all 0.5s ease-out';
-            observer.observe(item);
-        });
+        observer.observe(document.body, { attributes: true });
     </script>
 </body>
 </html>
