@@ -11,7 +11,7 @@ usuario = os.getenv("DB_USER")
 senha = os.getenv("DB_PASSWORD")
 nome_do_banco = os.getenv("DB_NAME")
 
-# Codifica a senha com quote_plus
+# Codifica quote_plus
 senha_codificada = quote_plus(senha)
 
 # Constrói a URI de conexão
@@ -33,7 +33,7 @@ CSV_FILENAME = "dados.csv"  # Atualize para o nome correto do CSV extraído
 HASH_FILENAME = "data_hash.txt"
 KAGGLE_DATASET = "piterfm/2022-ukraine-russian-war"
 
-# Configurações do MySQL
+# Configurações MySQL
 MYSQL_USER = usuario_ukwar
 MYSQL_PASSWORD = senha_codificada_war
 MYSQL_HOST = "localhost"

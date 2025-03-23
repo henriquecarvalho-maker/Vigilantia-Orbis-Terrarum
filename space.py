@@ -54,7 +54,7 @@ def space():
 
 @space_bp.route('/past-launches')
 def past_launches():
-    launches = get_past_launches(limit=100)  # ou ajuste conforme necessário
+    launches = get_past_launches(limit=100)
     # Valores default para paginação
     current_page = 1
     total_pages = 1
@@ -73,7 +73,7 @@ def events_page():
         caminho_imagem = evento.get('image') or "static/images/default_event.png"
         evento['imagem'] = caminho_imagem
     
-    # Debug: imprime os eventos no console para confirmar que há dados
+    # Debug
     print("Eventos:", events)
     
     return render_template('events.html', eventos=events)

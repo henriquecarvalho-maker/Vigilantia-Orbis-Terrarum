@@ -144,7 +144,6 @@ def get_upcoming_events(limit=10):
 def get_past_launches(limit=10):
     try:
         now_utc = datetime.now(timezone.utc)
-        # Busca os lançamentos que já ocorreram (data <= agora) e ordena do mais recente para o mais antigo
         launches = (Launch.query.filter(Launch.net <= now_utc)
                                 .order_by(Launch.net.desc())
                                 .limit(limit)
