@@ -31,7 +31,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
-
 #>>>-----------------------------------------Modelo de seleção---------------------------------------------<<<
 nltk.download('punkt_tab')
 nltk.download('stopwords')

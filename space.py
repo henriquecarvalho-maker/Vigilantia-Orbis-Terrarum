@@ -1,8 +1,10 @@
 # space.py
-from flask import Flask, render_template, Blueprint
+from flask import Flask, render_template, Blueprint, jsonify
 from datetime import datetime, timezone
 from launch_api import get_upcoming_launches, get_upcoming_events
 from launch_api import get_past_launches
+from update_starship import get_starship_info
+
 
 space_bp = Blueprint('space', __name__, template_folder='templates')
 
@@ -75,3 +77,30 @@ def events_page():
     print("Eventos:", events)
     
     return render_template('events.html', eventos=events)
+
+
+import requests
+
+app = Flask(__name__)
+
+@app.route('/api/starship', methods=['GET'])
+def get_starship():
+    url = 'https://api.spacexdata.com/v4/rockets'
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+
+        # Filtra o rocket que contenha "starship" (case insensitive)
+        starship_data = None
+        for rocket in data:
+            if "starship" in rocket["name"].lower():
+                starship_data = rocket
+                break
+
+        if not starship_data:
+            return jsonify({"error": "Starship not found"}), 404
+
+        return jsonify(starship_data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
