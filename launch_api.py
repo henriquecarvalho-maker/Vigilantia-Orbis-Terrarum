@@ -1,4 +1,4 @@
-# api/update_data.py
+# update_data.py
 import requests
 from datetime import datetime, timezone
 from extensions import db
