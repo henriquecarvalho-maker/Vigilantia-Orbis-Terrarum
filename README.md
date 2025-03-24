@@ -40,6 +40,8 @@ Este projeto é um ambiente de experimentação para análise de dados, machine 
 - **Linguagem:** Python (Pandas, NumPy, Scikit-Learn, Scrapy, Flask)
 - **APIs Públicas** para coleta de dados espaciais
 - **Machine Learning:** Regressão Logística, Vetorização de Texto
+- **Deep Learning:** Frameworks como TensorFlow e/ou PyTorch
+- **Visão Computacional:** OpenCV e técnicas de processamento de imagens
 - **NLP:** Hugging Face Transformers para sumarização automática
 - **Visualizações:** Matplotlib, Seaborn, Plotly
 
