@@ -5,6 +5,7 @@
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Scikit--Learn-orange)
 ![Scrapy](https://img.shields.io/badge/Scrapy-Web%20Scraping-green)
+![Deep Learning]
 
 ---
 
