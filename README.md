@@ -54,7 +54,7 @@ Dashboards e Visualizações (Matplotlib, Seaborn, Plotly)
 
 Clone este repositório:
 
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/henriquecarvalho-maker/Vigilantia-Orbis-Terrarum)
 
 Instale as dependências:
 
